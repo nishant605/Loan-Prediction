@@ -2,14 +2,24 @@ import os
 import io
 import pickle
 import uuid
+import logging
 import pandas as pd
 from flask import Flask, render_template, request, jsonify, send_file, session
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = 'loanai-secret-key-2026'
 
 # Load the trained model
-model = pickle.load(open('model.pkl', 'rb'))
+try:
+    model = pickle.load(open('model.pkl', 'rb'))
+    logger.info('Model loaded successfully')
+except Exception as e:
+    logger.error(f'Failed to load model: {e}')
+    raise
 
 # In-memory storage for batch results (keyed by session ID)
 batch_results = {}
@@ -50,6 +60,11 @@ def add_derived_features(df):
 
 
 # ---- Page Routes ----
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 
 @app.route('/')
 def index():

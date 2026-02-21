@@ -3,8 +3,11 @@ services:
     name: loan-prediction-app
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn server:app --bind 0.0.0.0:10000 --timeout 120 --workers 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
+      - key: PORT
+        value: 10000
     plan: free
+    healthCheckPath: /health
