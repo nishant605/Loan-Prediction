@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoanAI — Batch Prediction | Upload & Predict Multiple Loans</title>
+    <meta name="description"
+        content="Upload CSV or Excel files to predict loan approval status for multiple applicants at once. Download results as Excel or PDF." />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/batch.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>" />
+</head>
+
+<body>
+
+    <!-- Animated Background Orbs -->
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="/" class="nav-brand">
+            <div class="logo-icon">🏦</div>
+            <span class="brand-text">LoanAI</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Predict</a></li>
+            <li><a href="/performance">Model Performance</a></li>
+            <li><a href="/batch" class="active">Batch Predict</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <section class="hero-section" style="padding-bottom: 0.5rem;">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                Batch Processing
+            </div>
+            <h1 class="hero-title">
+                Batch <span class="gradient-text">Prediction</span>
+            </h1>
+            <p class="hero-subtitle">
+                Upload a CSV or Excel file with multiple loan applications and get instant predictions for all rows.
+                Download results as Excel or PDF.
+            </p>
+        </section>
+
+        <!-- Workflow Steps -->
+        <div class="batch-steps">
+            <div class="batch-step active" id="step-1-indicator">
+                <div class="step-num">1</div>
+                <span>Upload File</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="batch-step" id="step-2-indicator">
+                <div class="step-num">2</div>
+                <span>Review & Predict</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="batch-step" id="step-3-indicator">
+                <div class="step-num">3</div>
+                <span>Download Results</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Upload Section -->
+        <div class="glass-card upload-section" id="upload-section">
+            <div class="card-header">
+                <div class="header-icon">📁</div>
+                <h2>Upload Dataset</h2>
+                <span class="header-subtitle">CSV or Excel</span>
+            </div>
+            <div class="card-body">
+                <!-- Drop Zone -->
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-content">
+                        <div class="drop-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                        </div>
+                        <h3 class="drop-title">Drag & Drop your file here</h3>
+                        <p class="drop-text">or click to browse</p>
+                        <p class="drop-formats">Supports: <strong>.csv</strong>, <strong>.xlsx</strong>,
+                            <strong>.xls</strong></p>
+                    </div>
+                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" hidden />
+                </div>
+
+                <!-- File Info (shown after file select) -->
+                <div class="file-info" id="file-info" style="display:none;">
+                    <div class="file-icon">📄</div>
+                    <div class="file-details">
+                        <span class="file-name" id="file-name"></span>
+                        <span class="file-size" id="file-size"></span>
+                    </div>
+                    <button class="btn-remove-file" id="btn-remove-file" title="Remove file">✕</button>
+                </div>
+
+                <!-- Required Columns Info -->
+                <div class="columns-info">
+                    <div class="columns-header">
+                        <span>📋 Required Columns</span>
+                        <a href="/batch/sample" class="download-template-link">
+                            ⬇️ Download Sample Template
+                        </a>
+                    </div>
+                    <div class="columns-tags">
+                        <span class="col-tag">no_of_dependents</span>
+                        <span class="col-tag">education</span>
+                        <span class="col-tag">self_employed</span>
+                        <span class="col-tag">income_annum</span>
+                        <span class="col-tag">loan_amount</span>
+                        <span class="col-tag">loan_term</span>
+                        <span class="col-tag">cibil_score</span>
+                        <span class="col-tag">residential_assets_value</span>
+                        <span class="col-tag">commercial_assets_value</span>
+                        <span class="col-tag">luxury_assets_value</span>
+                        <span class="col-tag">bank_asset_value</span>
+                    </div>
+                </div>
+
+                <!-- Upload Button -->
+                <button class="btn-predict btn-upload" id="btn-upload" disabled>
+                    <span class="btn-text">🚀 Upload & Run Predictions</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2 & 3: Results Section (hidden initially) -->
+        <div class="results-section" id="results-section" style="display:none;">
+
+            <!-- Summary Cards -->
+            <div class="batch-summary" id="batch-summary">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Download Buttons -->
+            <div class="download-bar" id="download-bar">
+                <a class="btn-download btn-excel" id="btn-download-excel">
+                    <span class="download-icon">📊</span>
+                    <div>
+                        <strong>Download Excel</strong>
+                        <small>.xlsx format</small>
+                    </div>
+                </a>
+                <a class="btn-download btn-pdf" id="btn-download-pdf">
+                    <span class="download-icon">📑</span>
+                    <div>
+                        <strong>Download PDF</strong>
+                        <small>Report format</small>
+                    </div>
+                </a>
+                <button class="btn-download btn-new" id="btn-new-batch">
+                    <span class="download-icon">🔄</span>
+                    <div>
+                        <strong>New Batch</strong>
+                        <small>Upload another file</small>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Results Table -->
+            <div class="glass-card" id="results-table-card">
+                <div class="card-header">
+                    <div class="header-icon">📊</div>
+                    <h2>Prediction Results</h2>
+                    <span class="header-subtitle" id="results-count"></span>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <!-- Filter Bar -->
+                    <div class="table-toolbar">
+                        <div class="filter-group">
+                            <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
+                            <button class="filter-btn" data-filter="approved" id="filter-approved">✅ Approved</button>
+                            <button class="filter-btn" data-filter="rejected" id="filter-rejected">❌ Rejected</button>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="table-search" class="form-control" placeholder="🔍 Search..."
+                                style="max-width: 220px; padding: 8px 14px; font-size: 0.85rem;" />
+                        </div>
+                    </div>
+
+                    <!-- Table Container -->
+                    <div class="table-container" id="table-container">
+                        <table class="results-table" id="results-table">
+                            <thead id="table-head"></thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with ❤️ using Machine Learning · Batch predictions for any dataset size</p>
+            <p style="margin-top: 4px;">© 2026 LoanAI · For educational purposes only</p>
+        </footer>
+    </div>
+
+    <script src="/static/batch.js"></script>
+</body>
+
+</html>

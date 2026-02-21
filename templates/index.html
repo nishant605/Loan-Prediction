@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoanAI — Instant Loan Prediction | AI-Powered Approval Engine</title>
+  <meta name="description"
+    content="Get instant loan approval predictions powered by advanced machine learning. Enter your financial details and receive a real-time assessment." />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>" />
+</head>
+
+<body>
+
+  <!-- Animated Background Orbs -->
+  <div class="bg-orbs">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <!-- Confetti Canvas (for approval celebration) -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon"></span>
+    <span class="toast-message"></span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="nav-brand">
+      <div class="logo-icon">🏦</div>
+      <span class="brand-text">LoanAI</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Predict</a></li>
+      <li><a href="/performance">Model Performance</a></li>
+      <li><a href="/batch">Batch Predict</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="predict">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        AI-Powered Prediction Engine
+      </div>
+      <h1 class="hero-title">
+        Know Your Loan Status<br />
+        <span class="gradient-text">Before You Apply</span>
+      </h1>
+      <p class="hero-subtitle">
+        Enter your financial details and our machine learning model will predict
+        your loan approval status instantly — no hard inquiry, no waiting.
+      </p>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-value">95.2%</div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4,269+</div>
+        <div class="stat-label">Training Samples</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">&lt;1s</div>
+        <div class="stat-label">Prediction Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">15</div>
+        <div class="stat-label">Features Analyzed</div>
+      </div>
+    </div>
+
+    <!-- App Grid: Form + Results -->
+    <div class="app-grid">
+
+      <!-- Left: Prediction Form -->
+      <div class="glass-card" id="form-card">
+        <div class="card-header">
+          <div class="header-icon">📋</div>
+          <h2>Loan Application</h2>
+          <span class="header-subtitle">All fields required</span>
+        </div>
+        <div class="card-body">
+          <form id="loan-form" autocomplete="off">
+
+            <!-- Row 1: Dependents + Education -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dependents">
+                  Dependents
+                  <span class="info-tip" data-tip="Number of people financially dependent on you">?</span>
+                </label>
+                <div class="range-wrapper">
+                  <input type="range" id="dependents" name="dependents" min="0" max="5" value="0" />
+                  <div class="range-value"><span id="dependents-val">0</span> dependents</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="education">Education <span class="required">*</span></label>
+                <select id="education" name="education" class="form-control">
+                  <option value="Graduate">Graduate</option>
+                  <option value="Not Graduate">Not Graduate</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Self Employed + Annual Income -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="self-employed">Self Employed? <span class="required">*</span></label>
+                <select id="self-employed" name="selfEmployed" class="form-control">
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="income">
+                  Annual Income (₹)
+                  <span class="info-tip" data-tip="Your total annual income before tax">?</span>
+                </label>
+                <input type="number" id="income" name="income" class="form-control" placeholder="e.g. 5000000" min="1"
+                  required />
+              </div>
+            </div>
+
+            <!-- Row 3: Loan Amount + Total Assets -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="loan-amount">Loan Amount (₹) <span class="required">*</span></label>
+                <input type="number" id="loan-amount" name="loanAmount" class="form-control" placeholder="e.g. 10000000"
+                  min="0" required />
+              </div>
+              <div class="form-group">
+                <label for="total-assets">
+                  Total Assets (₹)
+                  <span class="info-tip"
+                    data-tip="Combined value of all your assets: property, investments, savings, etc.">?</span>
+                </label>
+                <input type="number" id="total-assets" name="totalAssets" class="form-control"
+                  placeholder="e.g. 20000000" min="1" required />
+              </div>
+            </div>
+
+            <!-- Loan Term Slider -->
+            <div class="form-group">
+              <label for="loan-term">
+                Loan Term
+                <span class="info-tip" data-tip="Duration of the loan repayment period">?</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="loan-term" name="loanTerm" min="1" max="30" value="10" />
+                <div class="range-value"><span id="loan-term-val">10</span> years</div>
+              </div>
+            </div>
+
+            <!-- CIBIL Score Slider -->
+            <div class="form-group">
+              <label for="cibil-score">
+                CIBIL Score
+                <span class="info-tip" data-tip="Your credit score as reported by TransUnion CIBIL (300-900)">?</span>
+              </label>
+              <div class="range-wrapper">
+                <input type="range" id="cibil-score" name="cibilScore" min="300" max="900" value="700" />
+                <div class="range-value"><span id="cibil-val">700</span> <span id="cibil-label"
+                    style="color: var(--text-muted); font-weight: 400;">— Good</span></div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-predict" id="predict-btn">
+              <span class="btn-text">⚡ Predict Loan Status</span>
+              <div class="spinner"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Results Panel -->
+      <div>
+        <!-- Placeholder before prediction -->
+        <div class="glass-card" id="placeholder-card">
+          <div class="card-body" style="padding: 60px 40px; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 16px; opacity: 0.4;">🔮</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-secondary);">
+              Awaiting Your Details
+            </h3>
+            <p
+              style="font-size: 0.88rem; color: var(--text-muted); max-width: 280px; margin: 0 auto; line-height: 1.7;">
+              Fill out the application form on the left to get an instant prediction on your loan approval status.
+            </p>
+          </div>
+        </div>
+
+        <!-- Result Card (hidden initially) -->
+        <div class="glass-card result-panel" id="result-card">
+          <!-- Status Banner -->
+          <div class="result-status" id="result-status">
+            <div class="status-icon" id="status-icon"></div>
+            <h2 class="status-title" id="status-title"></h2>
+            <p class="status-message" id="status-message"></p>
+          </div>
+
+          <!-- Summary -->
+          <div class="summary-section">
+            <div class="summary-title">📊 Application Summary</div>
+            <div class="summary-grid" id="summary-grid"></div>
+
+            <!-- CIBIL Meter -->
+            <div class="cibil-meter" id="cibil-meter-section">
+              <div class="meter-header">
+                <span class="meter-label">CIBIL Credit Score</span>
+                <span class="meter-value" id="meter-score"></span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill" id="meter-fill"></div>
+              </div>
+              <div class="meter-labels">
+                <span>300 · Poor</span>
+                <span>900 · Excellent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Our AI model analyzes 15 financial features to provide an instant prediction</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Enter Details</h3>
+          <p>Provide your financial information including income, desired loan amount, CIBIL score, and asset values.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>AI Analysis</h3>
+          <p>Our machine learning model processes 15 engineered features to evaluate your credit-worthiness in
+            real-time.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Get Results</h3>
+          <p>Receive an instant prediction along with a detailed financial summary and actionable insights.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Built with ❤️ using Machine Learning · Model trained on 4,269+ samples</p>
+      <p style="margin-top: 4px;">© 2026 LoanAI · For educational purposes only</p>
+    </footer>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+
+</html>

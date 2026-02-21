@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoanAI — Model Performance Dashboard</title>
+    <meta name="description"
+        content="Comprehensive model performance analytics for the LoanAI prediction engine. View accuracy, confusion matrix, ROC curve, feature importance, and more." />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/performance.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Animated Background Orbs -->
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="/" class="nav-brand">
+            <div class="logo-icon">🏦</div>
+            <span class="brand-text">LoanAI</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Predict</a></li>
+            <li><a href="/performance" class="active">Model Performance</a></li>
+            <li><a href="/batch">Batch Predict</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <section class="hero-section" style="padding-bottom: 1rem;">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                Performance Analytics
+            </div>
+            <h1 class="hero-title">
+                Model <span class="gradient-text">Performance</span>
+            </h1>
+            <p class="hero-subtitle">
+                Comprehensive evaluation metrics, visualizations, and insights from our XGBoost-based loan prediction
+                engine.
+            </p>
+        </section>
+
+        <!-- Model Info Bar -->
+        <div class="model-info-bar" id="model-info-bar">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Metric Score Cards -->
+        <div class="metrics-grid" id="metrics-grid">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Charts Row 1: Confusion Matrix + ROC Curve -->
+        <div class="charts-row">
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">🎯</div>
+                    <h2>Confusion Matrix</h2>
+                </div>
+                <div class="card-body chart-body">
+                    <div class="confusion-matrix-container" id="confusion-matrix">
+                        <!-- Custom drawn CM -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">📈</div>
+                    <h2>ROC Curve</h2>
+                    <span class="header-subtitle" id="roc-auc-label"></span>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="roc-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2: Precision-Recall + Feature Importance -->
+        <div class="charts-row">
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">⚖️</div>
+                    <h2>Precision-Recall Curve</h2>
+                    <span class="header-subtitle" id="pr-auc-label"></span>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="pr-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">🏗️</div>
+                    <h2>Feature Importance</h2>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="feature-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 3: Cross-Validation + Class Distribution -->
+        <div class="charts-row">
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">🔄</div>
+                    <h2>Cross-Validation Scores</h2>
+                    <span class="header-subtitle">5-Fold Stratified</span>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="cv-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">📊</div>
+                    <h2>Class Distribution</h2>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="class-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 4: CIBIL Distribution + Prediction Probability -->
+        <div class="charts-row">
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">📉</div>
+                    <h2>CIBIL Score Distribution</h2>
+                    <span class="header-subtitle">By Loan Status</span>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="cibil-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card chart-card">
+                <div class="card-header">
+                    <div class="header-icon">🎲</div>
+                    <h2>Prediction Probability Distribution</h2>
+                </div>
+                <div class="card-body chart-body">
+                    <canvas id="prob-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classification Report Table -->
+        <div class="glass-card" style="margin-top: 2rem;">
+            <div class="card-header">
+                <div class="header-icon">📋</div>
+                <h2>Detailed Metrics Breakdown</h2>
+            </div>
+            <div class="card-body">
+                <div class="metrics-table-container" id="metrics-table">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with ❤️ using Machine Learning · XGBoost + Optuna Hyperparameter Tuning</p>
+            <p style="margin-top: 4px;">© 2026 LoanAI · For educational purposes only</p>
+        </footer>
+    </div>
+
+    <script src="/static/performance.js"></script>
+</body>
+
+</html>
