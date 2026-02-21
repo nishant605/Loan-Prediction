@@ -2,6 +2,7 @@ flask==3.1.2
 pandas==2.3.3
 scikit-learn==1.8.0
 xgboost==3.2.0
+imbalanced-learn==0.13.0
 openpyxl==3.1.5
 reportlab==4.4.10
 gunicorn==23.0.0
